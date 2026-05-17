@@ -9,6 +9,25 @@ export default function Navigation() {
   const [isHidden, setIsHidden] = useState(false);
   const { scrollY } = useScroll();
 
+  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, targetId: string) => {
+    e.preventDefault();
+    const el = document.getElementById(targetId);
+    if (el) {
+      (window as any).isAutoScrolling = true;
+      document.documentElement.style.scrollSnapType = 'none';
+      
+      const targetY = el.getBoundingClientRect().top + window.scrollY;
+      window.scrollTo({ top: targetY, behavior: 'smooth' });
+
+      setTimeout(() => {
+        (window as any).isAutoScrolling = false;
+        window.dispatchEvent(new Event('scroll'));
+      }, 1000);
+
+      setIsOpen(false);
+    }
+  };
+
   useEffect(() => {
     const observer = new MutationObserver(() => {
       setDetailOpen(document.body.style.overflow === 'hidden');
@@ -79,7 +98,7 @@ export default function Navigation() {
 
           {/* Left: EavanChen Logo & Links */}
           <div className="flex items-center justify-start flex-shrink-0">
-            <a href="#hero" className={`hover:-translate-y-0.5 transition-transform flex items-center ${textColorClass}`}>
+            <a href="#hero" onClick={(e) => handleNavClick(e, 'hero')} className={`hover:-translate-y-0.5 transition-transform flex items-center ${textColorClass}`}>
               <span className="font-[900] uppercase text-[18px] md:text-[20px] lg:text-[22px] tracking-tight">CHENYI</span>
               <span className="w-[1px] h-[16px] md:h-[18px] bg-current opacity-40 mx-[8px] md:mx-[12px]"></span>
               <span className="font-normal uppercase text-[12px] md:text-[14px] lg:text-[16px] tracking-wide">EAVAN</span>
@@ -93,6 +112,7 @@ export default function Navigation() {
                 <a
                   key={s.id}
                   href={`#${s.id}`}
+                  onClick={(e) => handleNavClick(e, s.id)}
                   className={`group relative px-3 sm:px-4 lg:px-6 py-1.5 md:py-2.5 rounded-full overflow-hidden cursor-pointer transition-colors ${activeSection === s.id ? activeBgClass : hoverBgClass}`}
                 >
                   <div className="relative z-10 grid grid-cols-1 grid-rows-1 overflow-hidden">
@@ -110,11 +130,14 @@ export default function Navigation() {
 
           {/* Right: Contact & Download Button & Mobile Toggle */}
           <div className="flex items-center justify-end gap-2 lg:gap-3 flex-shrink-0">
-            <a href="#contact" className={`hidden xl:flex items-center justify-center pr-5 lg:pr-6 pl-2 py-2 rounded-full bg-transparent ${textColorClass} ${borderColorClass} ${hoverBgClass} transition-all duration-400 ease-out flex-shrink-0 border`}>
-              <div className="w-5 h-5 lg:w-6 lg:h-6 rounded-full overflow-hidden lg:mr-2.5 mr-2 bg-white flex-shrink-0">
-                <img src="https://api.dicebear.com/7.x/notionists/svg?seed=Felix&backgroundColor=ffffff" alt="Avatar" className="w-full h-full object-cover" />
+            <a href="#contact" onClick={(e) => handleNavClick(e, 'contact')} className={`group hidden md:flex items-center justify-center pr-5 lg:pr-6 pl-2 py-2 rounded-full bg-white/80 backdrop-blur-md text-black hover:bg-white transition-all duration-400 ease-out flex-shrink-0 shadow-sm border border-white/20`}>
+              <div className="w-5 h-5 lg:w-6 lg:h-6 rounded-full overflow-hidden lg:mr-2.5 mr-2 bg-gray-100 flex-shrink-0 relative z-10">
+                <img src="https://api.dicebear.com/7.x/notionists/svg?seed=Felix&backgroundColor=transparent" alt="Avatar" className="w-full h-full object-cover" />
               </div>
-              <span className="text-[12px] lg:text-[13px] font-medium tracking-wide whitespace-nowrap">请联系我</span>
+              <div className="relative z-10 grid grid-cols-1 grid-rows-1 overflow-hidden font-medium tracking-wide text-[12px] lg:text-[13px] whitespace-nowrap">
+                <span className="col-start-1 row-start-1 transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:-translate-y-full block">请联系我</span>
+                <span className="col-start-1 row-start-1 translate-y-full transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:translate-y-0 block">请联系我</span>
+              </div>
             </a>
 
             {/* Mobile Nav Toggle */}
@@ -145,7 +168,7 @@ export default function Navigation() {
                 <a
                   key={s.id}
                   href={`#${s.id}`}
-                  onClick={() => setIsOpen(false)}
+                  onClick={(e) => handleNavClick(e, s.id)}
                   className="text-black text-2xl font-medium tracking-widest flex flex-col items-center gap-2 group"
                 >
                   <span className="transition-transform group-hover:scale-105">{s.label}</span>

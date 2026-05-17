@@ -193,6 +193,7 @@ export default function Works() {
 
   useEffect(() => {
     const handleScroll = () => {
+      if ((window as any).isAutoScrolling) return;
       if (!containerRef.current) return;
       const rect = containerRef.current.getBoundingClientRect();
       // Only enforce strict snapping when the user is deep inside the Works section
@@ -216,7 +217,9 @@ export default function Works() {
   // Update active index based on scroll position
   useMotionValueEvent(smoothProgress, "change", (latest) => {
     let index = Math.floor(latest * projects.length);
-    // When exactly at the bottom (latest = 1), cap to the last element
+    if (index < 0) {
+      index = 0;
+    }
     if (index >= projects.length) {
       index = projects.length - 1;
     }
@@ -312,12 +315,12 @@ export default function Works() {
                 animate="animate"
                 exit="exit"
                 transition={{ duration: 1.5, ease: [0.22, 1, 0.36, 1] }}
-                style={{ backgroundColor: projects[activeIndex].bg }}
+                style={{ backgroundColor: projects[activeIndex]?.bg || '#000' }}
               >
-                {projects[activeIndex].bgImg && (
+                {projects[activeIndex]?.bgImg && (
                   <img 
-                    src={projects[activeIndex].bgImg} 
-                    alt={projects[activeIndex].name} 
+                    src={projects[activeIndex]?.bgImg} 
+                    alt={projects[activeIndex]?.name} 
                     className="w-full h-full object-cover" 
                     referrerPolicy="no-referrer"
                   />
@@ -356,20 +359,20 @@ export default function Works() {
                       className="text-5xl md:text-7xl font-semibold tracking-tight mb-3 md:mb-4 cursor-pointer hover:opacity-80 transition-opacity pointer-events-auto w-fit"
                       onClick={() => setSelectedProject(projects[activeIndex])}
                     >
-                      {projects[activeIndex].name.split(' ')[0]}
+                      {projects[activeIndex]?.name?.split(' ')[0]}
                     </h2>
                     
                     <h3 
                       className="text-xl md:text-3xl font-light opacity-80 mb-8 md:mb-10 cursor-pointer hover:opacity-100 transition-opacity pointer-events-auto w-fit"
                       onClick={() => setSelectedProject(projects[activeIndex])}
                     >
-                      {projects[activeIndex].name.split(' ').slice(1).join(' ')}
+                      {projects[activeIndex]?.name?.split(' ').slice(1).join(' ')}
                     </h3>
                     
                     <div className="h-[2px] w-8 md:w-12 bg-white/40 mb-6 md:mb-8 pointer-events-auto" />
                     
                     <p className="text-lg md:text-xl font-medium max-w-md opacity-90 mb-10 pointer-events-auto">
-                      {projects[activeIndex].desc}
+                      {projects[activeIndex]?.desc}
                     </p>
 
                     <button 
