@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { motion, useScroll, useTransform, MotionConfig } from 'motion/react';
 import Hero from './components/Hero';
 import BrandAmbition from './components/BrandAmbition';
@@ -6,9 +7,11 @@ import Works from './components/Works';
 import Experience from './components/Experience';
 import Contact from './components/Contact';
 import Navigation from './components/Navigation';
+import Photography from './components/Photography';
 
 export default function App() {
   const { scrollY } = useScroll();
+  const [showPhotography, setShowPhotography] = useState(false);
   
   const backgroundColor = useTransform(
     scrollY, 
@@ -23,7 +26,7 @@ export default function App() {
         style={{ backgroundColor }} 
         className="min-h-screen text-white w-full"
       >
-        <Navigation />
+        <Navigation setShowPhotography={setShowPhotography} />
         <Hero scrollY={scrollY} />
         
         <div className="w-full relative z-20">
@@ -41,6 +44,8 @@ export default function App() {
           </div>
         </footer>
       </motion.div>
+
+      <Photography isOpen={showPhotography} onClose={() => setShowPhotography(false)} />
     </MotionConfig>
   );
 }

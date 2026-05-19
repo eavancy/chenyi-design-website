@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence, useScroll, useMotionValueEvent } from 'motion/react';
+import { Camera } from 'lucide-react';
 
-export default function Navigation() {
+export default function Navigation({ setShowPhotography }: { setShowPhotography: (val: boolean) => void }) {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [detailOpen, setDetailOpen] = useState(false);
@@ -130,6 +131,18 @@ export default function Navigation() {
 
           {/* Right: Contact & Download Button & Mobile Toggle */}
           <div className="flex items-center justify-end gap-2 lg:gap-3 flex-shrink-0">
+            <button 
+              onClick={() => setShowPhotography(true)} 
+              className={`group hidden md:flex items-center justify-center pr-5 lg:pr-6 pl-2 py-2 rounded-full backdrop-blur-md transition-all duration-400 ease-out flex-shrink-0 border ${isLightSection ? 'border-black/20 text-black hover:bg-black/5' : 'border-white/20 text-white hover:bg-white/10'}`}
+            >
+              <div className={`w-5 h-5 lg:w-6 lg:h-6 rounded-full overflow-hidden lg:mr-2.5 mr-2 flex-shrink-0 relative z-10 flex items-center justify-center border ${isLightSection ? 'border-black/20 bg-transparent text-black' : 'border-white/20 bg-transparent text-white'}`}>
+                <Camera strokeWidth={1.5} className="w-3 h-3 lg:w-3.5 lg:h-3.5" />
+              </div>
+              <div className="relative z-10 grid grid-cols-1 grid-rows-1 overflow-hidden font-medium tracking-wide text-[12px] lg:text-[13px] whitespace-nowrap">
+                <span className="col-start-1 row-start-1 transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:-translate-y-full block">陈毅摄影</span>
+                <span className="col-start-1 row-start-1 translate-y-full transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:translate-y-0 block">陈毅摄影</span>
+              </div>
+            </button>
             <a href="#contact" onClick={(e) => handleNavClick(e, 'contact')} className={`group hidden md:flex items-center justify-center pr-5 lg:pr-6 pl-2 py-2 rounded-full bg-white/80 backdrop-blur-md text-black hover:bg-white transition-all duration-400 ease-out flex-shrink-0 shadow-sm border border-white/20`}>
               <div className="w-5 h-5 lg:w-6 lg:h-6 rounded-full overflow-hidden lg:mr-2.5 mr-2 bg-gray-100 flex-shrink-0 relative z-10">
                 <img src="https://api.dicebear.com/7.x/notionists/svg?seed=Felix&backgroundColor=transparent" alt="Avatar" className="w-full h-full object-cover" />
@@ -175,6 +188,16 @@ export default function Navigation() {
                   <span className="text-sm font-mono text-gray-400 uppercase">{s.enLabel}</span>
                 </a>
               ))}
+              <button
+                onClick={() => {
+                  setShowPhotography(true);
+                  setIsOpen(false);
+                }}
+                className="text-black text-2xl font-medium tracking-widest flex flex-col items-center gap-2 group"
+              >
+                <span className="transition-transform group-hover:scale-105">陈毅摄影</span>
+                <span className="text-sm font-mono text-gray-400 uppercase">Photography</span>
+              </button>
             </div>
           </motion.div>
         )}
